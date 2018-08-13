@@ -37,6 +37,10 @@ public class CampanhaService {
         return this.campanhaDAO.findActiveInDate(LocalDate.now());
     }
 
+    public void excluiCampanha(String campanhaKey) {
+        this.campanhaDAO.delete(campanhaKey);
+    }
+
     private Campanha campanha(String nome, LocalDate inicio, LocalDate fim) {
         Campanha campanha = new Campanha();
         campanha.setNome(nome);

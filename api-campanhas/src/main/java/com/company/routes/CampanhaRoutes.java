@@ -11,8 +11,7 @@ import java.time.LocalDate;
 
 import static com.company.utils.ApplicationUtils.df;
 import static com.company.utils.ApplicationUtils.mapper;
-import static spark.Spark.get;
-import static spark.Spark.post;
+import static spark.Spark.*;
 
 @Component
 public class CampanhaRoutes {
@@ -37,7 +36,13 @@ public class CampanhaRoutes {
 
             return campanhaService.novaCampanha(nome, timeId, LocalDate.parse(inicio, df), LocalDate.parse(fim, df));
         }, jsonTransformer);
-        
+
+        delete("/campanhas/:campanhaKey", (req, res) -> {
+            String campanha = req.params("campanhaKey");
+            campanhaService.excluiCampanha(campanha);
+            return "{}";
+        });
+
     }
 
 }

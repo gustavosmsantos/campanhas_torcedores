@@ -1,5 +1,6 @@
 package com.company.dao;
 
+import com.arangodb.ArangoCollection;
 import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDatabase;
 import com.arangodb.entity.BaseEdgeDocument;
@@ -20,7 +21,7 @@ public class CampanhaDAO {
     @Autowired
     private ArangoDatabase arangoDb;
 
-    private static final String CAMPANHAS_COLLECTION = "campanhas";
+    public static final String CAMPANHAS_COLLECTION = "campanhas";
 
     private static final String CAMPANHAS_TIMES_COLLECTIONS = "campanhas_times";
 
@@ -42,6 +43,23 @@ public class CampanhaDAO {
 
     public void save(Campanha campanha) {
         arangoDb.collection(CAMPANHAS_COLLECTION).insertDocument(campanha);
+    }
+
+    public void delete(String campanhaKey) {
+        arangoDb.collection(CAMPANHAS_COLLECTION).deleteDocument(campanhaKey);
+        deleteEdges(CAMPANHAS_TIMES_COLLECTIONS, campanhaKey);
+    }
+
+    private void deleteEdges(String edgeName, String campanhaKey) {
+        HashMap<String, Object> bindVars = new HashMap<>();
+        bindVars.put("from", CAMPANHAS_COLLECTION + "/" + campanhaKey);
+        ArangoCollection collection = arangoDb.collection(edgeName);
+        String query = "FOR e IN " + edgeName + " FILTER e.`_from` == @from RETURN e.`_key`";
+        ArangoCursor<String> queryExecution = arangoDb.query(query, bindVars, String.class);
+        List<String> edges = queryExecution.asListRemaining();
+        for (String edge : edges) {
+            collection.deleteDocument(edge);
+        }
     }
 
 }
