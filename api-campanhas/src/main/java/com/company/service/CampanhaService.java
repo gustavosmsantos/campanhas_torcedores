@@ -3,6 +3,7 @@ package com.company.service;
 import com.company.dao.CampanhaDAO;
 import com.company.entity.Campanha;
 import com.company.exception.ValidationException;
+import com.company.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,9 @@ public class CampanhaService {
 
     @Autowired
     private CampanhaDAO campanhaDAO;
+
+    @Autowired
+    private NotificationService notificationService;
 
     public Campanha novaCampanha(String nome, String timeId, LocalDate inicio, LocalDate fim) throws ValidationException {
         if (inicio == null || fim == null) {
@@ -29,6 +33,14 @@ public class CampanhaService {
         Campanha campanha = campanha(nome, inicio, fim);
         campanhaDAO.save(campanha);
         campanhaDAO.associaTime(campanha.getId(), timeId);
+
+        List<Campanha> campanhasAfetadas = campanhaDAO.findInBetween(inicio, fim);
+        for (Campanha campanhaAfetada : campanhasAfetadas) {
+            LocalDate changedDate = campanhaAfetada.getFim().plusDays(1);
+            campanhaAfetada.setFim(changedDate);
+            campanhaDAO.update(campanhaAfetada);
+            notificationService.notificaAlteracaoCampanha(campanha);
+        }
 
         return campanha;
     }

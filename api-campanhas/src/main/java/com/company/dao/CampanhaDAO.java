@@ -34,6 +34,15 @@ public class CampanhaDAO {
         return campanhaCursor.asListRemaining();
     }
 
+    public List<Campanha> findInBetween(LocalDate inicio, LocalDate fim) {
+        String query = "FOR c IN campanhas FILTER c.`inicio` <= @inicio AND c.`fim` >= @fim RETURN c";
+        Map<String, Object> bindVars = new HashMap<>();
+        bindVars.put("inicio", df.format(inicio));
+        bindVars.put("fim", df.format(fim));
+        ArangoCursor<Campanha> campanhaCursor = arangoDb.query(query, bindVars, Campanha.class);
+        return campanhaCursor.asListRemaining();
+    }
+
     public void associaTime(String idCampanha, String idTime) {
         BaseEdgeDocument edgeDocument = new BaseEdgeDocument();
         edgeDocument.setFrom(idCampanha);
@@ -43,6 +52,10 @@ public class CampanhaDAO {
 
     public void save(Campanha campanha) {
         arangoDb.collection(CAMPANHAS_COLLECTION).insertDocument(campanha);
+    }
+
+    public void update(Campanha campanha) {
+        arangoDb.collection(CAMPANHAS_COLLECTION).updateDocument(campanha.getKey(), campanha);
     }
 
     public void delete(String campanhaKey) {
