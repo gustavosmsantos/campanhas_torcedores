@@ -1,8 +1,8 @@
 package com.company.dao;
 
 import com.arangodb.ArangoCursor;
-import com.arangodb.ArangoDBException;
 import com.arangodb.ArangoDatabase;
+import com.arangodb.entity.BaseEdgeDocument;
 import com.company.entity.Campanha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,9 @@ public class CampanhaDAO {
     @Autowired
     private ArangoDatabase arangoDb;
 
-    private static final String COLLECTION_NAME = "campanhas";
+    private static final String CAMPANHAS_COLLECTION = "campanhas";
+
+    private static final String CAMPANHAS_TIMES_COLLECTIONS = "campanhas_times";
 
     public List<Campanha> findActiveInDate(LocalDate date) {
         String now = date.format(df);
@@ -31,12 +33,15 @@ public class CampanhaDAO {
         return campanhaCursor.asListRemaining();
     }
 
+    public void associaTime(String idCampanha, String idTime) {
+        BaseEdgeDocument edgeDocument = new BaseEdgeDocument();
+        edgeDocument.setFrom(idCampanha);
+        edgeDocument.setTo(idTime);
+        arangoDb.collection(CAMPANHAS_TIMES_COLLECTIONS).insertDocument(edgeDocument);
+    }
+
     public void save(Campanha campanha) {
-        try {
-            arangoDb.collection(COLLECTION_NAME).insertDocument(campanha);
-        } catch (ArangoDBException e) {
-            e.printStackTrace();
-        }
+        arangoDb.collection(CAMPANHAS_COLLECTION).insertDocument(campanha);
     }
 
 }

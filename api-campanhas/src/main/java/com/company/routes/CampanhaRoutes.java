@@ -23,6 +23,7 @@ public class CampanhaRoutes {
     private static JsonTransformer jsonTransformer = new JsonTransformer();
 
     public void register() {
+
         get("/campanhas", (req, res) -> campanhaService.buscaCampanhasAtivas(), jsonTransformer);
 
         post("/campanhas", (req, res) -> {
@@ -36,6 +37,7 @@ public class CampanhaRoutes {
 
             return campanhaService.novaCampanha(nome, timeId, LocalDate.parse(inicio, df), LocalDate.parse(fim, df));
         }, jsonTransformer);
+        
     }
 
 }
