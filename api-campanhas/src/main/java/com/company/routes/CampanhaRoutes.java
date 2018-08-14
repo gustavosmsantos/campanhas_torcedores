@@ -1,6 +1,7 @@
 package com.company.routes;
 
 
+import com.company.entity.Campanha;
 import com.company.routes.transformer.JsonTransformer;
 import com.company.service.CampanhaService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -40,6 +41,14 @@ public class CampanhaRoutes {
         delete("/campanhas/:campanhaKey", (req, res) -> {
             String campanha = req.params("campanhaKey");
             campanhaService.excluiCampanha(campanha);
+            return "{}";
+        });
+
+        patch("/campanhas/:campanhaKey", (req, res) -> {
+            String campanhaKey = req.params("campanhaKey");
+
+            Campanha campanha = mapper.readValue(req.body(), Campanha.class);
+            campanhaService.atualizaCampanha(campanhaKey, campanha);
             return "{}";
         });
 

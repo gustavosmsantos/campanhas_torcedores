@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDate;
 
-@JsonIgnoreProperties(value = {"id", "revision", "properties"})
+@JsonIgnoreProperties(value = {"id", "revision", "properties"}, ignoreUnknown = true)
 public class Campanha extends BaseDocument {
 
     private String nome;

@@ -5,9 +5,11 @@ import com.company.entity.Campanha;
 import com.company.exception.ValidationException;
 import com.company.model.CampanhasSensibilizadas;
 import com.company.notification.NotificationService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -32,10 +34,19 @@ public class CampanhaService {
         //TODO: validar se time existe
 
         Campanha campanha = campanha(nome, inicio, fim);
-        CampanhasSensibilizadas campanhasSensibilizadas = campanhaDAO.gravaCampanha(campanha, timeId);
+        CampanhasSensibilizadas campanhasSensibilizadas = campanhaDAO.save(campanha, timeId);
         campanhasSensibilizadas.getCampanhasAfetadas().forEach(c -> notificationService.notificaAlteracaoCampanha(c));
 
         return campanhasSensibilizadas.getCampanhaSalva();
+    }
+
+    public void atualizaCampanha(String campanhaKey, Campanha campanha) {
+        campanha.setKey(campanhaKey);
+        try {
+            this.campanhaDAO.update(campanha);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public List<Campanha> buscaCampanhasAtivas() {
