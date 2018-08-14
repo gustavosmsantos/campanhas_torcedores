@@ -8,6 +8,7 @@ public class NotificationService {
 
     public void notificaAlteracaoCampanha(Campanha campanha) {
         //TODO:
+        System.out.println(campanha);
     }
 
 }

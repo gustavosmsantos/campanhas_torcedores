@@ -3,6 +3,7 @@ package com.company.service;
 import com.company.dao.CampanhaDAO;
 import com.company.entity.Campanha;
 import com.company.exception.ValidationException;
+import com.company.model.CampanhasSensibilizadas;
 import com.company.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,18 +32,10 @@ public class CampanhaService {
         //TODO: validar se time existe
 
         Campanha campanha = campanha(nome, inicio, fim);
-        campanhaDAO.save(campanha);
-        campanhaDAO.associaTime(campanha.getId(), timeId);
+        CampanhasSensibilizadas campanhasSensibilizadas = campanhaDAO.gravaCampanha(campanha, timeId);
+        campanhasSensibilizadas.getCampanhasAfetadas().forEach(c -> notificationService.notificaAlteracaoCampanha(c));
 
-        List<Campanha> campanhasAfetadas = campanhaDAO.findInBetween(inicio, fim);
-        for (Campanha campanhaAfetada : campanhasAfetadas) {
-            LocalDate changedDate = campanhaAfetada.getFim().plusDays(1);
-            campanhaAfetada.setFim(changedDate);
-            campanhaDAO.update(campanhaAfetada);
-            notificationService.notificaAlteracaoCampanha(campanha);
-        }
-
-        return campanha;
+        return campanhasSensibilizadas.getCampanhaSalva();
     }
 
     public List<Campanha> buscaCampanhasAtivas() {

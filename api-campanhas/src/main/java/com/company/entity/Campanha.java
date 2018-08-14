@@ -38,4 +38,16 @@ public class Campanha extends BaseDocument {
         return fim;
     }
 
+    @Override
+    public String toString() {
+        return "Campanha{" +
+                "nome='" + nome + '\'' +
+                ", inicio=" + inicio +
+                ", fim=" + fim +
+                ", id='" + id + '\'' +
+                ", key='" + key + '\'' +
+                ", revision='" + revision + '\'' +
+                ", properties=" + properties +
+                '}';
+    }
 }
