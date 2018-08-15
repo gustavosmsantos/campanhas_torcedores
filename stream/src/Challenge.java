@@ -1,26 +1,50 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Challenge {
 
     private static String vowels = "aeiouAEIOU";
 
     public static void main(String[] args) {
-
-        String string = "aAbBABacafe";
-        Map<Character, Integer> countMap = new HashMap<>();
-        CharSequenceStream stream = new CharSequenceStream(string);
-
-        while(stream.hasNext()) {
-            char next = stream.getNext();
-
-            System.out.println(next);
-
-
-        }
+        char element = getElement(new CharSequenceStream("aEAbBABacafedu"));
+        System.out.println(element);
     }
 
-    private boolean isVowel(char c) {
+    public static char getElement(Stream charactersStream) {
+        String allElements = "";
+
+        List<String> candidates = new ArrayList<>();
+        String candidate = "";
+        while (charactersStream.hasNext()) {
+            char next = charactersStream.getNext();
+            String character = Character.toString(next);
+            if (isVowel(next)) {
+                candidate = (candidate.isEmpty() || candidate.length() == 2) ? candidate.concat(character) : character;
+            } else {
+                candidate = (candidate.length() == 1) ? candidate.concat(character) : "";
+            }
+
+            if (candidate.length() == 3) {
+                candidates.add(candidate);
+                candidate = isVowel(next) ? character : "";
+            }
+
+            allElements = allElements.concat(character);
+        }
+
+        for (String element : candidates) {
+            char c = element.charAt(2);
+            int firstIndex = allElements.indexOf(c);
+            char changedCase = Character.isUpperCase(c) ? Character.toLowerCase(c) : Character.toUpperCase(c);
+            if (firstIndex == allElements.lastIndexOf(c) && allElements.indexOf(changedCase) < 0) {
+                return c;
+            }
+        }
+
+        return '0';
+    }
+
+    private static boolean isVowel(char c) {
         return vowels.indexOf(c) >= 0;
     }
 
