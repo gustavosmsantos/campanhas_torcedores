@@ -1,0 +1,12 @@
+version: '3'
+services:
+  api-campanhas:
+    image: "api-campanhas:latest"
+    ports:
+      - "4567:4567"
+  arangodb:
+    image: "arangodb/arangodb:latest"
+    environment:
+      - ARANGO_NO_AUTH=1
+    ports:
+      - "8529:8529"

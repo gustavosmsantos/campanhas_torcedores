@@ -63,6 +63,8 @@ public class CampanhaDAO {
             p.put("timeId", timeId);
             options.params(p);
 
+            //A execução transacional no ArangoDb é feita server-side.
+            //Para tanto, toda a lógica de execução se encontra no script gravacao_campanha.js
             return arangoDb.transaction(query, CampanhasSensibilizadas.class, options);
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException();

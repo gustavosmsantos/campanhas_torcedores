@@ -1,6 +1,5 @@
 package com.company.routes;
 
-
 import com.company.entity.Campanha;
 import com.company.routes.transformer.JsonTransformer;
 import com.company.service.CampanhaService;

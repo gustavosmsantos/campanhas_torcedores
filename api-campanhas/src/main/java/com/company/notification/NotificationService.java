@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class NotificationService {
 
     public void notificaAlteracaoCampanha(Campanha campanha) {
-        //TODO:
+        //TODO: envio de mensagem para um tópico, onde sistemas interessados tenham listeners para notificação
         System.out.println(campanha);
     }
 
