@@ -2,7 +2,7 @@
 
 Api responsável pelas operações de CRUD de uma campanha.
 
-## Métodos
+## Endpoints
 
 - GET `/campanhas`;
 
