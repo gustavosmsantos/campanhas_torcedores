@@ -1,14 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Challenge {
-
-    private static String vowels = "aeiouAEIOU";
-
-    public static void main(String[] args) {
-        char element = getElement(new CharSequenceStream("aEAbBABacafedu"));
-        System.out.println(element);
-    }
+public class StreamElement {
 
     public static char getElement(Stream charactersStream) {
         String allElements = "";
@@ -45,7 +38,7 @@ public class Challenge {
     }
 
     private static boolean isVowel(char c) {
-        return vowels.indexOf(c) >= 0;
+        return "aeiouAEIOU".indexOf(c) >= 0;
     }
 
     static class CharSequenceStream implements Stream {
