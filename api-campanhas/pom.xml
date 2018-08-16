@@ -13,6 +13,12 @@
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.0.4.RELEASE</version>
+  </parent>
+
   <dependencies>
 
     <dependency>
@@ -44,25 +50,23 @@
     <dependency>
       <groupId>com.arangodb</groupId>
       <artifactId>arangodb-java-driver</artifactId>
-      <version>4.7.0</version>
+      <version>4.6.0</version>
     </dependency>
-
-    <!--<dependency>-->
-      <!--<groupId>org.springframework</groupId>-->
-      <!--<artifactId>spring-core</artifactId>-->
-      <!--<version>5.0.8.RELEASE</version>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-      <!--<groupId>org.springframework</groupId>-->
-      <!--<artifactId>spring-context</artifactId>-->
-      <!--<version>5.0.8.RELEASE</version>-->
-    <!--</dependency>-->
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
-      <version>2.0.4.RELEASE</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.arangodb</groupId>
+      <artifactId>arangodb-spring-data</artifactId>
+      <version>2.3.0</version>
     </dependency>
 
 
@@ -82,12 +86,12 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>com.palantir.docker.compose</groupId>
-      <artifactId>docker-compose-rule-junit4</artifactId>
-      <version>0.34.0</version>
-      <scope>test</scope>
-    </dependency>
+    <!--<dependency>-->
+    <!--<groupId>com.palantir.docker.compose</groupId>-->
+    <!--<artifactId>docker-compose-rule-junit4</artifactId>-->
+    <!--<version>0.34.0</version>-->
+    <!--<scope>test</scope>-->
+    <!--</dependency>-->
 
   </dependencies>
 
@@ -133,12 +137,5 @@
 
     </plugins>
   </build>
-
-  <repositories>
-    <repository>
-      <id>palantir maven repo</id>
-      <url>https://dl.bintray.com/palantir/releases</url>
-    </repository>
-  </repositories>
 
 </project>

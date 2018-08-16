@@ -3,12 +3,11 @@ package com.company.service;
 import com.company.dao.CampanhaDAO;
 import com.company.entity.Campanha;
 import com.company.exception.ValidationException;
-import com.company.model.CampanhasSensibilizadas;
 import com.company.notification.NotificationService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,6 +20,7 @@ public class CampanhaService {
     @Autowired
     private NotificationService notificationService;
 
+    @Transactional
     public Campanha novaCampanha(String nome, String timeId, LocalDate inicio, LocalDate fim) throws ValidationException {
         if (inicio == null || fim == null) {
             throw new ValidationException("Os parâmetros \"inicio\" e \"fim\" devem ser informados");
@@ -33,19 +33,12 @@ public class CampanhaService {
         //TODO: validar se time existe
 
         Campanha campanha = campanha(nome, inicio, fim);
-        CampanhasSensibilizadas campanhasSensibilizadas = campanhaDAO.save(campanha, timeId);
-        campanhasSensibilizadas.getCampanhasAfetadas().forEach(c -> notificationService.notificaAlteracaoCampanha(c));
-
-        return campanhasSensibilizadas.getCampanhaSalva();
+        notificationService.notificaAlteracaoCampanha(campanha);
+        return campanhaDAO.save(campanha);
     }
 
     public void atualizaCampanha(String campanhaKey, Campanha campanha) {
-        campanha.setKey(campanhaKey);
-        try {
-            this.campanhaDAO.update(campanha);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        campanhaDAO.save(campanha);
     }
 
     public List<Campanha> buscaCampanhasAtivas() {
@@ -53,7 +46,7 @@ public class CampanhaService {
     }
 
     public void excluiCampanha(String campanhaKey) {
-        this.campanhaDAO.delete(campanhaKey);
+        this.campanhaDAO.deleteById(campanhaKey);
     }
 
     private Campanha campanha(String nome, LocalDate inicio, LocalDate fim) {
